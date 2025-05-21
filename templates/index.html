@@ -6,6 +6,15 @@
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
       <script src="{{ url_for('static',filename='js/script.js') }}"> </script>
       <link rel="stylesheet" href="{{ url_for('static',filename='styles/style.css') }}">
+      <script src="https://cdn.signalfx.com/o11y-gdi-rum/latest/splunk-otel-web.js" crossorigin="anonymous"></script>
+      <script>
+        SplunkRum.init({
+        realm: "us1",
+        rumAccessToken: '{{ splunk_token }}',
+        applicationName: "mb-cm",
+        deploymentEnvironment: "dev"
+        });
+      </script>
    </head>
    <body>
       <div class="main">

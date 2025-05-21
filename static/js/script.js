@@ -300,6 +300,22 @@ function connectToSOrg() {
          	console.log(RES)
             $("#src_info")[0].innerHTML = "Connected to : " +  RES.id + " " + RES.organizationName;
             $("#src_info")[0].style = "color: green";
+            
+            //Add custom span to monitor usage
+            const Provider = SplunkRum.provider;
+            var tracer=Provider.getTracer('appModuleLoader');
+            span = tracer.startSpan('connect', {
+            //span attributes
+            attributes: {
+                   'workflow.name': 'connect',
+                   'src_org_name': RES.organizationName,
+                   'src_org_id': RES.id
+            }
+            });
+            span.end();
+            //custom work done
+            
+            
             loadTests()
             loadDG()
             loadCL()
@@ -579,6 +595,20 @@ function connectToDOrg() {
          	console.log(RES)
             $("#dest_info")[0].innerHTML = "Connected to : " +  RES.id + " " + RES.organizationName;
             $("#dest_info")[0].style = "color: green";
+            
+            //Add custom span to monitor usage
+            const Provider = SplunkRum.provider;
+            var tracer=Provider.getTracer('appModuleLoader');
+            span = tracer.startSpan('connect', {
+            //span attributes
+            attributes: {
+                   'workflow.name': 'connect',
+                   'dest_org_name': RES.organizationName,
+                   'dest_org_id': RES.id
+            }
+            });
+            span.end();
+            //custom work done
             }
       })
       .fail(function (xhr, text, err) {
@@ -621,6 +651,22 @@ function connectToTOrg() {
          	console.log(RES)
             $("#target_info")[0].innerHTML = "Connected to : " +  RES.id + " " + RES.organizationName;
             $("#target_info")[0].style = "color: green";
+            
+            //Add custom span to monitor usage
+            const Provider = SplunkRum.provider;
+            var tracer=Provider.getTracer('appModuleLoader');
+            span = tracer.startSpan('gdi', {
+            //span attributes
+            attributes: {
+                   'workflow.name': 'gdi',
+                   'dest_org_name': RES.organizationName,
+                   'dest_org_id': RES.id
+            }
+            });
+            span.end();
+            //custom work done
+            
+            
             }
       })
       .fail(function (xhr, text, err) {

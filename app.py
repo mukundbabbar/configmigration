@@ -269,6 +269,7 @@ def create_sendEvent(data, TOKEN, REALM):
 @app.route("/", methods=['GET', 'POST'])
 def index():
   print("START")
+  rum_token = os.environ.get('SPLUNK_RUM_TOKEN', '')
 #  return render_template('index.html')
 #    src_org_json = get_org_details(config["source"]["access_token"],config["source"]["realm"])
 #    dest_org_json = get_org_details(config["destination"]["access_token"],config["destination"]["realm"])
@@ -277,7 +278,7 @@ def index():
 #    src_detectors_json = get_object('/detector',config["source"]["access_token"],config["source"]["realm"])
 #    src_tests_json = get_object('/synthetics/tests',config["source"]["access_token"],config["source"]["realm"])
 #    src_crosslink_json = get_object('/crosslink',config["source"]["access_token"],config["source"]["realm"])
-  return render_template('index.html', 
+  return render_template('index.html', splunk_token=rum_token,
     src_org_name="", 
     src_org_id="", 
     src_org_realm="",
