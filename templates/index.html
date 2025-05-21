@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>O11y Monk - MB</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="{{ url_for('static',filename='js/script.js') }}"> </script>
+      <link rel="stylesheet" href="{{ url_for('static',filename='styles/style.css') }}">
+   </head>
+   <body>
+      <div class="main">
+         <h2>Splunk Observability Cloud - Config Tool</h2>
+         <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'cm')">Cloud Migration</button>
+            <button class="tablinks" onclick="openTab(event, 'gdi')">Send data to O11y</button>
+         </div>
+         <!--CM TAB-->
+         <div id="cm" class="tabcontent">
+            <!--TOP BAR-->
+            <div>
+               <!--TOP LEFT-->
+               <div style="float:left;">
+                  <h2>Source Org</h2>
+                  {% if src_org_name == 'Error Connecting' %}
+                  {% set bg_color = '#ffd1b3' %}
+                  {% else %}
+                  {% set bg_color = 'lightblue' %}
+                  {% endif %}
+                  <br>	
+                  <table>
+                    <!-- 
+ <tr>
+                        <td><label for="orgi">Org Id:</label></td>
+                        <td><input type="text" id="srcorgid" name="srcorgid"><br>
+                        </td>
+                     </tr>
+ -->
+                     <tr>
+                        <td><label for="orgr">API Token:</label></td>
+                        <td><input type="text" id="srcorgapikey" name="srcorgapikey"><br>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><label for="orgr">Realm:</label></td>
+                        <td><input type="text" id="srcorgrealm" name="srcorgrealm"><br>
+                        </td>
+                     </tr>
+                     
+                  </table>
+                  <input type="submit" name="ConnectToOrg" class="button" value="Load Config" onclick="connectToSOrg();">
+                  <div id="src_info">
+                  </div>
+               </div>
+               <!--TOP RIGHT-->
+               <div style="float:right;">
+                  <h2>Destination Org</h2>
+                  {% if dest_org_name == 'Error Connecting' %}
+                  {% set bg_color = '#ffd1b3' %}
+                  {% else %}
+                  {% set bg_color = 'lightblue' %}
+                  {% endif %}
+                  <br>
+                  <table>
+                     <tr>
+                        <td><label for="orgi">Session Token:</label></td>
+                        <td><input type="text" id="desttoken" name="desttoken"><br>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><label for="orgr">API Token:</label></td>
+                        <td><input type="text" id="destorgapikey" name="destorgapikey"><br>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><label for="orgr">Realm:</label></td>
+                        <td><input type="text" id="destorgrealm" name="destorgrealm"><br>
+                        </td>
+                     </tr>
+                  </table>
+                  <input type="submit" name="ConnectToOrg" class="button" value="Test Connection" onclick="connectToDOrg();">
+                  <div id="dest_info">
+                  </div>
+               </div>
+               <!--bottom div-->
+               <div class="column" style="background-color:#e6e6e6; border:1px solid grey; float:right;">
+                  <button id="dghead" type="button" class="collapsible">Dashboard Groups ({{src_dashgroup_json.count}})</button>
+                  <div class="content" id="table-wrapper">
+                     <div id="table-scroll">
+                        <table id="dgtable">
+                           <tbody>
+                              <tr>
+                                 <td><input type="checkbox" id="alldgcb" name="alldgcb" onClick="toggle(this,'dgcheck')" /></td>
+                                 <td><b>Id</b></td>
+                                 <td><b>Dashboard Group</b></td>
+                                 <td><b>Dashboards</b></td>
+                              </tr>
+                              {% for j in src_dashgroup_json.results %}
+                              <tr>
+                                 <td><input type="checkbox" name="dgcheck" id={{j['id']}} /></td>
+                                 <td>{{j['id']}}</td>
+                                 <td>{{j['name']}}</td>
+                                 <td>
+                                    <table id="dashtable">
+                                       {% for d in j.dashboards %}
+                                       <tr>
+                                          <td>{{d}}</td>
+                                       </tr>
+                                       {% endfor %}
+                                    </table>
+                                 </td>
+                              </tr>
+                              {% endfor %}
+                           </tbody>
+                        </table>
+                     </div>
+                     <input type="submit" name="Export" class="button" value="Export Dashboards" onclick="expDg();">
+                  </div>
+                  <button id="dethead" type="button" class="collapsible">Detectors ({{src_detectors_json.count}})</button>
+                  <div class="content" id="table-wrapper">
+                     <div id="table-scroll">
+                        <table id="dettable">
+                           <tbody>
+                              <tr>
+                                 <td><input type="checkbox" id="alldetcb" name="alldetcb" onClick="toggle(this,'detcheck')" /></td>
+                                 <td><b>Id</b></td>
+                                 <td><b>Detectors</b></td>
+                              </tr>
+                              {% for j in src_detectors_json.results %}
+                              <tr>
+                                 <td><input type="checkbox" name="detcheck" id={{j['id']}} /></td>
+                                 <td>{{j['id']}}</td>
+                                 <td>{{j['name']}}</td>
+                              </tr>
+                              {% endfor %}
+                           </tbody>
+                        </table>
+                     </div>
+                     <input type="submit" name="Export" class="button" value="Export Detectors" onclick="expDet();">
+                  </div>
+                  <button id="syntesthead" type="button" class="collapsible">Synthetic Tests ({{src_tests_json.totalCount}})</button>
+                  <div class="content" id="table-wrapper">
+                     <div id="table-scroll">
+                        <table id="teststable">
+                           <tbody>
+                              <tr>
+                                 <td><input type="checkbox" id="alltestscb" name="alltestscb" onClick="toggle(this,'testscheck')" /></td>
+                                 <td><b>Id</b></td>
+                                 <td><b>Name</b></td>
+                                 <td><b>Type</b></td>
+                              </tr>
+                              {% for j in src_tests_json.tests %}
+                              <tr>
+                                 <td><input type="checkbox" name="testscheck" id={{j['id']}} /></td>
+                                 <td>{{j['id']}}</td>
+                                 <td>{{j['name']}}</td>
+                                 <td>{{j['type']}}</td>
+                              </tr>
+                              {% endfor %}                                                            
+                           </tbody>
+                        </table>
+                     </div>
+                     <input type="submit" name="Export" class="button" value="Export Tests" onclick="expTests();">
+                  </div>
+                  <button id="teamhead" type="button" class="collapsible">Teams ({{src_team_json.count}})</button>
+                  <div class="content" id="table-wrapper">
+                     <div id="table-scroll">
+                        <table id="teamtable">
+                           <tbody>
+                              <tr>
+                                 <td><input type="checkbox" id="allteamcb" name="allteamcb" onClick="toggle(this,'teamcheck')" /></td>
+                                 <td><b>Id</b></td>
+                                 <td><b>Name</b></td>
+                              </tr>
+                              {% for j in src_team_json.results %}
+                              <tr>
+                                 <td><input type="checkbox" name="teamcheck" id={{j['id']}} /></td>
+                                 <td>{{j['id']}}</td>
+                                 <td>{{j['name']}}</td>
+                                 <td>
+                                    <table id="teamtable">
+                                       {% for d in j.team %}
+                                       <tr>
+                                          <td>{{d}}</td>
+                                       </tr>
+                                       {% endfor %}
+                                    </table>
+                                 </td>
+                              </tr>
+                              {% endfor %}
+                           </tbody>
+                        </table>
+                     </div>
+                     <input type="submit" name="Export" class="button" value="Export Teams" onclick="expTeam();">
+                  </div>                  
+                  <button id="clhead" type="button" class="collapsible">Data Links ({{src_crosslink_json.count}})</button>
+                  <div class="content" id="table-wrapper">
+                     <div id="table-scroll">
+                        <table id="cltable">
+                           <tbody>
+                              <tr>
+                                 <td><input type="checkbox" id="allclscb" name="allclscb" onClick="toggle(this,'clcheck')" /></td>
+                                 <td><b>Id</b></td>
+                                 <td><b>Property Name</b></td>
+                                 <td><b>Target Type</b></td>
+                              </tr>
+                              {% for j in src_crosslink_json.results %}
+                              <tr>
+                                 <td><input type="checkbox" name="clcheck" id={{j['id']}} /></td>
+                                 <td>{{j['id']}}</td>
+                                 <td>{{j['propertyName']}}</td>
+                                 <td>{{j['targets'][0]['type']}}</td>
+                              </tr>
+                              {% endfor %}
+                           </tbody>
+                        </table>
+                     </div>
+                     <input type="submit" name="Export" class="button" value="Export Data Links" onclick="expCL();">
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div id="gdi" class="tabcontent">
+            <h2>Target Org</h2>
+            {% if dest_org_name == 'Error Connecting' %}
+            {% set bg_color = '#ffd1b3' %}
+            {% else %}
+            {% set bg_color = 'lightblue' %}
+            {% endif %}
+            <br>
+            <table>
+                     <tr>
+                        <td><label for="orgr">API Token:</label></td>
+                        <td><input type="text" id="targetorgapikey" name="targetorgapikey"><br>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><label for="orgr">Ingest Token:</label></td>
+                        <td><input type="text" id="targetingest" name="targetingest"><br>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><label for="orgr">Realm:</label></td>
+                        <td><input type="text" id="targetorgrealm" name="targetorgrealm"><br>
+                        </td>
+                     </tr>
+             
+             # TO-DO TEAMS section   
+
+            </table>
+            <input type="submit" name="ConnectToOrg" class="button" value="Test Connection" onclick="connectToTOrg();">
+            <div id="target_info">
+            </div>
+            
+            <h3>Metrics</h3>
+            <textarea id="metric_data" name="metric_date" rows="15" cols="50">
+{
+        "gauge": [
+        {
+                "metric": "testmetric",
+                "value": "99.98751",
+                "dimensions": {
+                        "dim1": "any"
+                },
+                "timestamp": 1700579287079
+                }
+        ]
+}
+		</textarea>
+            <br>
+            <input type="submit" value="Metrics API" onclick="createMetric();"/>
+            <h3>Events</h3>
+            <textarea id="event_data" name="event_date" rows="15" cols="50">
+[
+        {
+        "category": "USER_DEFINED",
+        "eventType": "test_event",
+        "dimensions": {
+                "environment": "production",
+                "service": "API"
+        },
+        "properties": {
+                "sha1": "1234567890abc"
+        },
+        "timestamp": 1700579287079
+        }
+]      
+
+		</textarea>
+            <br>
+            <input type="submit" value="Events API" onclick="createE();"/>
+         </div>
+      </div>
+      <div id="bottom-bar">
+      	<div class="alert-box success">success !!!</div>
+		<div class="alert-box failure">Failure!!! Check console log</div>
+		<div class="alert-box warning">Warning !!!</div>
+	  </div>
+      <script>
+         var coll = document.getElementsByClassName("collapsible");
+         var i;
+         
+         for (i = 0; i < coll.length; i++) {
+         console.log("hello");
+         coll[i].addEventListener("click", function() {
+         this.classList.toggle("active");
+         var content = this.nextElementSibling;
+         console.log(content);
+         if (content.style.display === "block") {
+         content.style.display = "none";
+         } else {
+         content.style.display = "block";
+         }
+         });
+         }
+         
+      </script>
+   </body>
+</html>

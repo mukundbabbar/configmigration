@@ -1,0 +1,168 @@
+.alert-box {
+	padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;  
+}
+
+#bottom-bar {
+	width: 100%;
+	position: fixed;
+    bottom: 0;
+}
+
+.success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    display: none;
+}
+
+.failure {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    display: none;
+}
+
+.warning {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+    display: none;
+}
+table-wrapper {
+     border-collapse: collapse;
+     width: 100%;
+}
+ table-wrapper th, #table-wrapper tr {
+     border: 1px solid #ddd;
+}
+ #table-wrapper tr:nth-child(odd){
+    background-color: #f2f2f2;
+}
+ #table-wrapper tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+ table-wrapper tr:hover {
+    background-color: #ddd;
+}
+ table-wrapper th {
+     text-align: left;
+     background-color: #04AA6D;
+}
+ #table-wrapper {
+     position:relative;
+}
+ #table-scroll {
+     height:300px;
+     overflow:auto;
+     margin-top:20px;
+}
+ #table-wrapper table {
+     width:100%;
+}
+ #table-wrapper table * {
+     color:black;
+}
+ #table-wrapper table thead th .text {
+     position:absolute;
+     top:-20px;
+     z-index:2;
+     height:20px;
+     width:35%;
+     border:1px solid black;
+}
+ body {
+     font-family: Arial;
+     margin: 0;
+     background: rgb(247, 247, 247);
+     font-family: Arial, Helvetica, sans-serif;
+}
+/* Style the tab */
+ .tab {
+     overflow: hidden;
+     border: 1px solid #ccc;
+     background-color: #f1f1f1;
+}
+/* Style the buttons inside the tab */
+ .tab button {
+     background-color: inherit;
+     float: left;
+     border: none;
+     outline: none;
+     cursor: pointer;
+     padding: 14px 16px;
+     transition: 0.3s;
+     font-size: 17px;
+}
+/* Change background color of buttons on hover */
+ .tab button:hover {
+     background-color: #ddd;
+}
+/* Create an active/current tablink class */
+ .tab button.active {
+     background-color: #ccc;
+}
+/* Style the tab content */
+ .tabcontent {
+     display: none;
+     padding: 6px 12px;
+     border: none;
+     border-top: none;
+}
+ .main {
+     margin-left: 30px 
+}
+ * {
+     box-sizing: border-box;
+}
+/* Create two equal columns that floats next to each other */
+ .column {
+     float: none;
+     width: 100%;
+     padding: 10px;
+     height: 100%;
+}
+/* Clear floats after the columns */
+ .row:after {
+     content: "";
+     display: table;
+     clear: both;
+}
+ .button {
+     background-color: #4CAF50;
+     border: none;
+     color: white;
+     padding: 15px 32px;
+     text-align: center;
+     text-decoration: none;
+     display: inline-block;
+     font-size: 16px;
+     margin: 10px 2px;
+     cursor: pointer;
+}
+
+.collapsible {
+  background-color: #777;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.active, .collapsible:hover {
+  background-color: #666;
+}
+
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
+ 
